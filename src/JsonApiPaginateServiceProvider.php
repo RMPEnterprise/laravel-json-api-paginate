@@ -2,14 +2,12 @@
 
 namespace Spatie\JsonApiPaginate;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
 
 class JsonApiPaginateServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
     public function boot()
     {
         if ($this->app->runningInConsole()) {
@@ -21,9 +19,6 @@ class JsonApiPaginateServiceProvider extends ServiceProvider
         $this->registerMacro();
     }
 
-    /**
-     * Register the service provider.
-     */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/json-api-paginate.php', 'json-api-paginate');
@@ -36,20 +31,20 @@ class JsonApiPaginateServiceProvider extends ServiceProvider
             $defaultSize = $defaultSize ?? config('json-api-paginate.default_size');
             $numberParameter = config('json-api-paginate.number_parameter');
             $sizeParameter = config('json-api-paginate.size_parameter');
+            $paginationParameter = config('json-api-paginate.pagination_parameter');
 
-            $size = (int) request()->input('page.'.$sizeParameter, $defaultSize);
+            $size = (int) request()->input($paginationParameter.'.'.$sizeParameter, $defaultSize);
 
-            if ($maxResults && $size > $maxResults) {
-                $size = $maxResults;
-            }
+            $size = $size > $maxResults ? $maxResults : $size;
 
             if ($size === -1) {
                 $size = $this->toBase()->getCountForPagination();
             }
 
-            $paginator = $this->paginate($size, ['*'], 'page.'.$numberParameter)
-                ->setPageName('page['.$numberParameter.']')
-                ->appends(array_except(request()->input(), 'page.'.$numberParameter));
+            $paginator = $this
+                ->paginate($size, ['*'], $paginationParameter.'.'.$numberParameter)
+                ->setPageName($paginationParameter.'['.$numberParameter.']')
+                ->appends(Arr::except(request()->input(), $paginationParameter.'.'.$numberParameter));
 
             if (! is_null(config('json-api-paginate.base_url'))) {
                 $paginator->setPath(config('json-api-paginate.base_url'));

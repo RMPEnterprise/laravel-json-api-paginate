@@ -41,7 +41,7 @@ class BuilderTest extends TestCase
     /** @test */
     public function it_will_return_the_configured_default_when_maximum_is_removed()
     {
-        $paginator = TestModel::jsonPaginate(0);
+        $paginator = TestModel::jsonPaginate();
 
         $this->assertCount(30, $paginator);
     }
