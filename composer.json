@@ -1,5 +1,5 @@
 {
-    "name": "rmp/laravel-json-api-paginate",
+    "name": "spatie/laravel-json-api-paginate",
     "description": "A paginator that plays nice with the JSON API spec",
     "keywords": [
         "spatie",
