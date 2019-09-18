@@ -12,7 +12,7 @@ class JsonApiPaginateServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/json-api-paginate.php' => config_path('json-api-paginate.php'),
+                __DIR__ . '/../config/json-api-paginate.php' => config_path('json-api-paginate.php'),
             ], 'config');
         }
 
@@ -21,7 +21,7 @@ class JsonApiPaginateServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/json-api-paginate.php', 'json-api-paginate');
+        $this->mergeConfigFrom(__DIR__ . '/../config/json-api-paginate.php', 'json-api-paginate');
     }
 
     protected function registerMacro()
@@ -46,7 +46,7 @@ class JsonApiPaginateServiceProvider extends ServiceProvider
                 ->setPageName($paginationParameter.'['.$numberParameter.']')
                 ->appends(Arr::except(request()->input(), $paginationParameter.'.'.$numberParameter));
 
-            if (! is_null(config('json-api-paginate.base_url'))) {
+            if (!is_null(config('json-api-paginate.base_url'))) {
                 $paginator->setPath(config('json-api-paginate.base_url'));
             }
 
