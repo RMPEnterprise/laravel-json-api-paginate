@@ -35,7 +35,9 @@ class JsonApiPaginateServiceProvider extends ServiceProvider
 
             $size = (int) request()->input($paginationParameter.'.'.$sizeParameter, $defaultSize);
 
-            $size = $size > $maxResults ? $maxResults : $size;
+            if ($maxResults && $size > $maxResults) {
+                $size = $maxResults;
+            }
 
             if ($size === -1) {
                 $size = $this->toBase()->getCountForPagination();
